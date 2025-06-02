@@ -5,12 +5,10 @@ import com.luv2code.springboot.employees.entity.Employee;
 import com.luv2code.springboot.employees.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +31,13 @@ public class EmployeeRestController {
     public List<Employee> findAll(){
         return employeeService.findAll();
     }
+    @Operation(summary = "Get Single Employee" , description = "Retrieve Single Employee")
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Employee getEmployeeById(@PathVariable @Min(value = 1) long id){
+        return employeeService.findById(id);
+    }
 
 
 }
