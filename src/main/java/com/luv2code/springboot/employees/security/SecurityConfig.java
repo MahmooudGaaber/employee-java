@@ -7,38 +7,24 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
 
 
+    // get users with roles form jdbc
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager (){
-        UserDetails john = User.builder()
-                .username("John")
-                .password("{noop}test123")
-                .roles("EMPLOYEE")
-                .build();
-
-        UserDetails mary = User.builder()
-                .username("Mary")
-                .password("{noop}test123")
-                .roles("EMPLOYEE","MANAGER")
-                .build();
-
-        UserDetails susan = User.builder()
-                .username("Susan")
-                .password("{noop}test123")
-                .roles("EMPLOYEE","MANAGER","ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(john,mary,susan);
+    public UserDetailsManager userDetailsManager (DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
     }
+
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception {
