@@ -46,6 +46,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(
                 configurer -> configurer
                         .requestMatchers("/docs/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET , "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST , "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET , "/api/employees").hasRole("EMPLOYEE")
                         .requestMatchers(HttpMethod.GET , "/api/employees/**").hasRole("EMPLOYEE")
                         .requestMatchers(HttpMethod.POST , "/api/employees").hasRole("MANAGER")
@@ -59,6 +61,7 @@ public class SecurityConfig {
                 exceptionHandlingError -> exceptionHandlingError
                         .authenticationEntryPoint(authenticationEntryPoint())
         );
+        httpSecurity.headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()) );
         return  httpSecurity.build();
     }
 
